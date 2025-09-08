@@ -1,0 +1,23 @@
+{
+  "cursor.ai.enabled": true,
+  "cursor.ai.autoComplete": true,
+  "cursor.ai.suggestions": true,
+  "cursor.ai.commands": {
+    "allowTerminalCommands": true,
+    "allowFileOperations": true,
+    "allowPackageManagement": true,
+    "allowGitOperations": true
+  },
+  "cursor.ai.permissions": {
+    "readFiles": true,
+    "writeFiles": true,
+    "executeCommands": true,
+    "accessNetwork": false
+  },
+  "cursor.ai.context": {
+    "includeProjectFiles": true,
+    "includeGitHistory": true,
+    "includePackageJson": true,
+    "includeConfigFiles": true
+  }
+}

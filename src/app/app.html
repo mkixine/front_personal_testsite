@@ -1,0 +1,35 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-xl p-8">
+      <h1 class="text-4xl font-bold text-gray-800 mb-4">
+        {{ title() }}
+      </h1>
+      <p class="text-lg text-gray-600 mb-6">
+        Angular + Tailwind CSS + SSG (Static Site Generation) のテストページです
+      </p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-blue-50 p-6 rounded-lg">
+          <h2 class="text-xl font-semibold text-blue-800 mb-2">Angular</h2>
+          <p class="text-blue-600">最新のAngularフレームワークを使用</p>
+        </div>
+        <div class="bg-green-50 p-6 rounded-lg">
+          <h2 class="text-xl font-semibold text-green-800 mb-2">Tailwind CSS</h2>
+          <p class="text-green-600">ユーティリティファーストのCSSフレームワーク</p>
+        </div>
+        <div class="bg-purple-50 p-6 rounded-lg">
+          <h2 class="text-xl font-semibold text-purple-800 mb-2">SSG</h2>
+          <p class="text-purple-600">静的サイト生成で高速配信</p>
+        </div>
+      </div>
+      
+      <div class="text-center">
+        <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+          テストボタン
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<router-outlet />
