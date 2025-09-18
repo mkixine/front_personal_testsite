@@ -1,0 +1,1943 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Test Front Budget",
+        "version": "1.0",
+        "description": "Test Front Budget"
+    },
+    "servers": [
+        {
+            "url": "https://mkixine-json.g.kuroco.app",
+            "description": "API Backend"
+        }
+    ],
+    "paths": {
+        "/rcms-api/7/login": {
+            "post": {
+                "tags": [
+                    "認証"
+                ],
+                "summary": "Login",
+                "description": "\n### **Login::login_challenge (v1)**\n\n",
+                "parameters": [
+                    {
+                        "name": "_output_format",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "形式 (json|xml|csv|zip)"
+                    },
+                    {
+                        "name": "_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "言語"
+                    },
+                    {
+                        "name": "_charset",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "文字コード"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login OK"
+                    },
+                    "400": {
+                        "description": "Input data is invalid"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    },
+                    "406": {
+                        "description": "Specified output format is not supported"
+                    }
+                },
+                "operationId": "postRcmsApi7Login",
+                "requestBody": {
+                    "required": true,
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "default": "",
+                                        "example": "",
+                                        "description": "ログインID"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "writeOnly": true,
+                                        "default": "",
+                                        "example": "",
+                                        "description": "ログインパスワード"
+                                    },
+                                    "login_save": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647,
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "default": 0,
+                                        "example": 0,
+                                        "description": "次回から自動的にログインする"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rcms-api/7/logout": {
+            "post": {
+                "tags": [
+                    "認証"
+                ],
+                "summary": "",
+                "description": "\n### **Login::logout (v1)**\n\n",
+                "parameters": [
+                    {
+                        "name": "_output_format",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "形式 (json|xml|csv|zip)"
+                    },
+                    {
+                        "name": "_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "言語"
+                    },
+                    {
+                        "name": "_charset",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "文字コード"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Logout OK"
+                    },
+                    "400": {
+                        "description": "Input data is invalid"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    },
+                    "406": {
+                        "description": "Specified output format is not supported"
+                    }
+                },
+                "operationId": "postRcmsApi7Logout"
+            }
+        },
+        "/rcms-api/7/profile": {
+            "get": {
+                "tags": [
+                    "認証"
+                ],
+                "summary": "",
+                "description": "\n### **Login::profile (v1)**\n\n\n## Controller parameters\n\n> **basic_info** `nickname`\n",
+                "parameters": [
+                    {
+                        "name": "_output_format",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "形式 (json|xml|csv|zip)"
+                    },
+                    {
+                        "name": "_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "言語"
+                    },
+                    {
+                        "name": "_charset",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "文字コード"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ユーザ情報"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "406": {
+                        "description": "Specified output format is not supported"
+                    }
+                },
+                "operationId": "getRcmsApi7Profile"
+            }
+        },
+        "/rcms-api/7/categories": {
+            "get": {
+                "tags": [
+                    "コンテンツ"
+                ],
+                "summary": "",
+                "description": "\n### **TopicsCategory::list (v1)**\n\next_col_01は配分割合のJSON\n{member_id_A: rate_a, ...}\n## Controller parameters\n\n> **topics_group_id** `16`\n",
+                "parameters": [
+                    {
+                        "name": "_output_format",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "形式 (json|xml|csv|zip)"
+                    },
+                    {
+                        "name": "_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "言語"
+                    },
+                    {
+                        "name": "_charset",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "文字コード"
+                    },
+                    {
+                        "name": "cnt",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "1ページの行数"
+                    },
+                    {
+                        "name": "pageID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "ページID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Topics category data successfully fetched"
+                    }
+                },
+                "operationId": "getRcmsApi7Categories"
+            }
+        },
+        "/rcms-api/7/insert": {
+            "post": {
+                "tags": [
+                    "コンテンツ"
+                ],
+                "summary": "",
+                "description": "\n### **Topics::insert (v1)**\n\n\n## Controller parameters\n\n> **topics_group_id** `16`\n",
+                "parameters": [
+                    {
+                        "name": "_output_format",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "形式 (json|xml|csv|zip)"
+                    },
+                    {
+                        "name": "_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "言語"
+                    },
+                    {
+                        "name": "_charset",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "文字コード"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Topic is validated"
+                    },
+                    "201": {
+                        "description": "Topic is created"
+                    },
+                    "202": {
+                        "description": "Topic is created, pending for approval"
+                    },
+                    "400": {
+                        "description": "Input data is invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "406": {
+                        "description": "Specified output format is not supported"
+                    },
+                    "422": {
+                        "description": "The request was well-formed but was unable to be followed due to semantic errors"
+                    }
+                },
+                "operationId": "postRcmsApi7Insert",
+                "requestBody": {
+                    "required": true,
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "subject": {
+                                        "type": "string",
+                                        "default": "",
+                                        "example": "Content Title",
+                                        "description": "コンテンツタイトル"
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "default": "",
+                                        "example": "",
+                                        "description": "Slug"
+                                    },
+                                    "contents_type": {
+                                        "anyOf": [
+                                            {
+                                                "type": "integer",
+                                                "format": "int32",
+                                                "minimum": -2147483648,
+                                                "maximum": 2147483647,
+                                                "default": 27,
+                                                "example": 27,
+                                                "description": "カテゴリID\n* 27 => カスタム",
+                                                "enum": [
+                                                    27
+                                                ]
+                                            },
+                                            {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "integer",
+                                                    "format": "int32",
+                                                    "minimum": -2147483648,
+                                                    "maximum": 2147483647,
+                                                    "default": 27,
+                                                    "example": 27,
+                                                    "description": "カテゴリID\n* 27 => カスタム",
+                                                    "enum": [
+                                                        27
+                                                    ]
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 1
+                                            }
+                                        ],
+                                        "default": 27,
+                                        "example": 27,
+                                        "description": "カテゴリ"
+                                    },
+                                    "topics_flg": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647,
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "default": 1,
+                                        "example": 1,
+                                        "description": "Loginしているメンバーのコンテンツは公開・非公開に関わらず表示する"
+                                    },
+                                    "contents": {
+                                        "type": "string",
+                                        "default": "",
+                                        "example": "",
+                                        "description": "内容"
+                                    },
+                                    "regular_flg": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647,
+                                        "default": 0,
+                                        "example": 0,
+                                        "description": "上位表示する"
+                                    },
+                                    "open_flg": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647,
+                                        "enum": [
+                                            0,
+                                            1,
+                                            2
+                                        ],
+                                        "example": 1,
+                                        "default": 0,
+                                        "description": "公開・非公開"
+                                    },
+                                    "dispatch_github_workflow": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647,
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 0,
+                                        "default": 0,
+                                        "description": "ワークフロー"
+                                    },
+                                    "secure_level": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "enum": [
+                                                2,
+                                                3,
+                                                4,
+                                                6
+                                            ]
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ],
+                                        "description": "APIリクエスト制限\n* 2 => Complex Query\n* 3 => Complex Query\n* 4 => Complex Query\n* 6 => Custom search condition name"
+                                    },
+                                    "open_sta_ymdhi": {
+                                        "anyOf": [
+                                            {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "pattern": "^((([0-9]+)\\-(0[1-9]|1[0-2])\\-(0[1-9]|[1-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3]):(00|10|20|30|40|50):00)(Z|(\\+|-)([0-1][0-9]|2[0-3]):([0-5][0-9])))$"
+                                            },
+                                            {
+                                                "type": "string",
+                                                "pattern": "^$"
+                                            }
+                                        ],
+                                        "example": "2025-09-19T01:00:00+09:00",
+                                        "description": "公開開始日時"
+                                    },
+                                    "open_end_ymdhi": {
+                                        "anyOf": [
+                                            {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "pattern": "^((([0-9]+)\\-(0[1-9]|1[0-2])\\-(0[1-9]|[1-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3]):(00|10|20|30|40|50):00)(Z|(\\+|-)([0-1][0-9]|2[0-3]):([0-5][0-9])))$"
+                                            },
+                                            {
+                                                "type": "string",
+                                                "pattern": "^$"
+                                            }
+                                        ],
+                                        "example": "2025-09-19T01:00:00+09:00",
+                                        "description": "公開終了日時"
+                                    },
+                                    "ymd": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "日付"
+                                    },
+                                    "creditor": {
+                                        "description": "支払い者",
+                                        "anyOf": [
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "module_type": {
+                                                        "type": "string"
+                                                    },
+                                                    "module_id": {
+                                                        "type": "integer",
+                                                        "format": "int32",
+                                                        "minimum": -2147483648,
+                                                        "maximum": 2147483647
+                                                    }
+                                                },
+                                                "additionalProperties": false
+                                            },
+                                            {
+                                                "type": "integer",
+                                                "format": "int32",
+                                                "minimum": -2147483648,
+                                                "maximum": 2147483647
+                                            }
+                                        ],
+                                        "example": {
+                                            "module_type": "member",
+                                            "module_id": 0
+                                        }
+                                    },
+                                    "purpose": {
+                                        "description": "用途",
+                                        "type": "string",
+                                        "default": ""
+                                    },
+                                    "amount": {
+                                        "description": "清算総額",
+                                        "type": "string",
+                                        "default": ""
+                                    },
+                                    "payer": {
+                                        "type": "array",
+                                        "items": {
+                                            "description": "清算者",
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "module_type": {
+                                                            "type": "string"
+                                                        },
+                                                        "module_id": {
+                                                            "type": "integer",
+                                                            "format": "int32",
+                                                            "minimum": -2147483648,
+                                                            "maximum": 2147483647
+                                                        }
+                                                    },
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "type": "integer",
+                                                    "format": "int32",
+                                                    "minimum": -2147483648,
+                                                    "maximum": 2147483647
+                                                }
+                                            ],
+                                            "example": {
+                                                "module_type": "member",
+                                                "module_id": 0
+                                            }
+                                        },
+                                        "description": "清算者",
+                                        "default": [],
+                                        "minItems": 0,
+                                        "maxItems": 3
+                                    },
+                                    "rate": {
+                                        "type": "array",
+                                        "items": {
+                                            "description": "清算割合(%)",
+                                            "type": "string",
+                                            "default": ""
+                                        },
+                                        "description": "清算割合(%)",
+                                        "default": [],
+                                        "minItems": 0,
+                                        "maxItems": 3
+                                    },
+                                    "payment": {
+                                        "type": "array",
+                                        "items": {
+                                            "description": "清算金額",
+                                            "type": "string",
+                                            "default": ""
+                                        },
+                                        "description": "清算金額",
+                                        "default": [],
+                                        "minItems": 0,
+                                        "maxItems": 3
+                                    },
+                                    "paid": {
+                                        "type": "array",
+                                        "items": {
+                                            "description": "清算済みフラグ\n* 0 => 未清算\n* 1 => 清算済",
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "key": {
+                                                            "type": "string",
+                                                            "format": "",
+                                                            "enum": [
+                                                                "0",
+                                                                "1"
+                                                            ]
+                                                        },
+                                                        "label": {
+                                                            "type": "string",
+                                                            "format": "",
+                                                            "enum": [
+                                                                "未清算",
+                                                                "清算済"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "",
+                                                        "0",
+                                                        "1"
+                                                    ]
+                                                }
+                                            ],
+                                            "example": {
+                                                "key": "0",
+                                                "label": "未清算"
+                                            },
+                                            "default": "0"
+                                        },
+                                        "description": "清算済みフラグ",
+                                        "default": [],
+                                        "minItems": 0,
+                                        "maxItems": 3
+                                    },
+                                    "finished": {
+                                        "description": "清算完了フラグ\n* 0 => 未清算\n* 1 => 清算済",
+                                        "anyOf": [
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "key": {
+                                                        "type": "string",
+                                                        "format": "",
+                                                        "enum": [
+                                                            "0",
+                                                            "1"
+                                                        ]
+                                                    },
+                                                    "label": {
+                                                        "type": "string",
+                                                        "format": "",
+                                                        "enum": [
+                                                            "未清算",
+                                                            "清算済"
+                                                        ]
+                                                    }
+                                                },
+                                                "additionalProperties": false
+                                            },
+                                            {
+                                                "type": "string",
+                                                "enum": [
+                                                    "",
+                                                    "0",
+                                                    "1"
+                                                ]
+                                            }
+                                        ],
+                                        "example": {},
+                                        "default": ""
+                                    },
+                                    "validate_only": {
+                                        "type": "boolean",
+                                        "format": "",
+                                        "example": false,
+                                        "default": false,
+                                        "description": "入力チェックする"
+                                    },
+                                    "approvalflow_id": {
+                                        "type": "integer",
+                                        "format": "int64",
+                                        "description": "ワークフロー",
+                                        "example": 0
+                                    }
+                                },
+                                "additionalProperties": false,
+                                "required": [
+                                    "subject",
+                                    "creditor",
+                                    "amount"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rcms-api/7/list": {
+            "get": {
+                "tags": [
+                    "コンテンツ"
+                ],
+                "summary": "",
+                "description": "\n### **Topics::list (v1)**\n\n\n## Controller parameters\n\n> **ext_group** `true`\n\n> **topics_group_id** `16`\n\n> **cnt** `0`\n",
+                "parameters": [
+                    {
+                        "name": "_output_format",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "形式 (json|xml|csv|zip)"
+                    },
+                    {
+                        "name": "_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "言語"
+                    },
+                    {
+                        "name": "_charset",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "文字コード"
+                    },
+                    {
+                        "name": "cnt",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "1ページの行数"
+                    },
+                    {
+                        "name": "pageID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "ページID"
+                    },
+                    {
+                        "name": "filter",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "フィルタークエリ"
+                    },
+                    {
+                        "name": "filter_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": ""
+                    },
+                    {
+                        "name": "custom_search_id",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "検索条件"
+                    },
+                    {
+                        "name": "contents_type[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "type": "string",
+                                        "format": ""
+                                    },
+                                    {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647
+                                    }
+                                ]
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "表示するカテゴリID、設定がない場合はすべてのカテゴリが対象。"
+                    },
+                    {
+                        "name": "category_parent_id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "type": "string",
+                                        "format": ""
+                                    },
+                                    {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647
+                                    }
+                                ]
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "親カテゴリで絞り込む"
+                    },
+                    {
+                        "name": "exclude_category_parent_id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "type": "string",
+                                        "format": ""
+                                    },
+                                    {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647
+                                    }
+                                ]
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "表示しないカテゴリID"
+                    },
+                    {
+                        "name": "date",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "日付"
+                    },
+                    {
+                        "name": "exclude_topics_id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "type": "string",
+                                        "format": ""
+                                    },
+                                    {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647
+                                    }
+                                ]
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "除外するコンテンツID"
+                    },
+                    {
+                        "name": "tag_category_id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "format": "int32",
+                                "minimum": -2147483648,
+                                "maximum": 2147483647
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "表示対象になるタグカテゴリID、設定がない場合はすべてのカテゴリが対象になります。"
+                    },
+                    {
+                        "name": "tag_id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "format": "int32",
+                                "minimum": -2147483648,
+                                "maximum": 2147483647
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "表示対象になるタグIDです。"
+                    },
+                    {
+                        "name": "tag_cond",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "タグの絞り込み方を変える（デフォルト：OR)"
+                    },
+                    {
+                        "name": "exclude_tag_id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "format": "int32",
+                                "minimum": -2147483648,
+                                "maximum": 2147483647
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "表示対象から除外するタグIDです。"
+                    },
+                    {
+                        "name": "exclude_tag_category_id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "format": "int32",
+                                "minimum": -2147483648,
+                                "maximum": 2147483647
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "表示対象から除外するタグカテゴリIDです。"
+                    },
+                    {
+                        "name": "my_favorite_list",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "自分のお気に入りでコンテンツ絞り込む"
+                    },
+                    {
+                        "name": "my_comment_list",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": ""
+                    },
+                    {
+                        "name": "my_own_list",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": ""
+                    },
+                    {
+                        "name": "order_query",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "並び順を設定する 。例）topics_id=ASC"
+                    },
+                    {
+                        "name": "order_by_id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "type": "string",
+                                        "format": ""
+                                    },
+                                    {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647
+                                    }
+                                ]
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "topics_idで並び順を指定できます。指定したtopics_idのデータが上位表示されます。"
+                    },
+                    {
+                        "name": "central_id",
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer",
+                                    "format": "int32",
+                                    "minimum": -2147483648,
+                                    "maximum": 2147483647
+                                },
+                                {
+                                    "type": "string",
+                                    "format": ""
+                                }
+                            ]
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "取得の中心にするID"
+                    },
+                    {
+                        "name": "similar_search_id",
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer",
+                                    "format": "int32",
+                                    "minimum": -2147483648,
+                                    "maximum": 2147483647
+                                },
+                                {
+                                    "type": "string",
+                                    "format": ""
+                                }
+                            ]
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "類似検索ID(Slug)"
+                    },
+                    {
+                        "name": "id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "format": "int32",
+                                "minimum": -2147483648,
+                                "maximum": 2147483647
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "表示するコンテンツID"
+                    },
+                    {
+                        "name": "type",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "グルーピングの種類(array or object), default: array"
+                    },
+                    {
+                        "name": "groupBy",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "グルーピングの単位(category)"
+                    },
+                    {
+                        "name": "group_by_category_id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "format": "int32",
+                                "minimum": -2147483648,
+                                "maximum": 2147483647
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "カテゴリーでグルーピングした場合、絞り込むカテゴリID"
+                    },
+                    {
+                        "name": "show_empty_categories",
+                        "schema": {
+                            "type": "boolean",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "コンテンツが存在しないカテゴリも表示するかを指定します。（表示する:1, 表示しない:0）"
+                    },
+                    {
+                        "name": "order_by_category_count",
+                        "schema": {
+                            "type": "boolean",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "カテゴリごとの件数で並べ替える"
+                    },
+                    {
+                        "name": "topics_keyword",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "キーワード"
+                    },
+                    {
+                        "name": "topics_keyword_cond",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "キーワード検索のキーワード毎の絞り込み方を変える（デフォルト：AND)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Topics data successfully fetched"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Topics data could not be found"
+                    },
+                    "406": {
+                        "description": "Specified output format is not supported"
+                    }
+                },
+                "operationId": "getRcmsApi7List"
+            }
+        },
+        "/rcms-api/7/update/{topics_id}": {
+            "post": {
+                "tags": [
+                    "コンテンツ"
+                ],
+                "summary": "",
+                "description": "\n### **Topics::update (v1)**\n\n\n## Controller parameters\n\n> **topics_group_id** `16`\n",
+                "parameters": [
+                    {
+                        "name": "topics_id",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "path",
+                        "required": true,
+                        "style": "simple"
+                    },
+                    {
+                        "name": "_output_format",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "形式 (json|xml|csv|zip)"
+                    },
+                    {
+                        "name": "_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "言語"
+                    },
+                    {
+                        "name": "_doc_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "POST言語"
+                    },
+                    {
+                        "name": "_charset",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "文字コード"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Topic is updated"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "406": {
+                        "description": "Specified output format is not supported"
+                    },
+                    "422": {
+                        "description": "The request was well-formed but was unable to be followed due to semantic errors"
+                    }
+                },
+                "operationId": "postRcmsApi7UpdateTopicsId",
+                "requestBody": {
+                    "required": true,
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "subject": {
+                                        "type": "string",
+                                        "default": "",
+                                        "example": "Content Title",
+                                        "description": "コンテンツタイトル"
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "default": "",
+                                        "example": "",
+                                        "description": "Slug"
+                                    },
+                                    "contents_type": {
+                                        "anyOf": [
+                                            {
+                                                "type": "integer",
+                                                "format": "int32",
+                                                "minimum": -2147483648,
+                                                "maximum": 2147483647,
+                                                "default": 27,
+                                                "example": 27,
+                                                "description": "カテゴリID\n* 27 => カスタム",
+                                                "enum": [
+                                                    27
+                                                ]
+                                            },
+                                            {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "integer",
+                                                    "format": "int32",
+                                                    "minimum": -2147483648,
+                                                    "maximum": 2147483647,
+                                                    "default": 27,
+                                                    "example": 27,
+                                                    "description": "カテゴリID\n* 27 => カスタム",
+                                                    "enum": [
+                                                        27
+                                                    ]
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 1
+                                            }
+                                        ],
+                                        "default": 27,
+                                        "example": 27,
+                                        "description": "カテゴリ"
+                                    },
+                                    "topics_flg": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647,
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "default": 1,
+                                        "example": 1,
+                                        "description": "Loginしているメンバーのコンテンツは公開・非公開に関わらず表示する"
+                                    },
+                                    "contents": {
+                                        "type": "string",
+                                        "default": "",
+                                        "example": "",
+                                        "description": "内容"
+                                    },
+                                    "regular_flg": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647,
+                                        "default": 0,
+                                        "example": 0,
+                                        "description": "上位表示する"
+                                    },
+                                    "open_flg": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647,
+                                        "enum": [
+                                            0,
+                                            1,
+                                            2
+                                        ],
+                                        "example": 1,
+                                        "default": 0,
+                                        "description": "公開・非公開"
+                                    },
+                                    "dispatch_github_workflow": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647,
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 0,
+                                        "default": 0,
+                                        "description": "ワークフロー"
+                                    },
+                                    "secure_level": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "enum": [
+                                                2,
+                                                3,
+                                                4,
+                                                6
+                                            ]
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ],
+                                        "description": "APIリクエスト制限\n* 2 => Complex Query\n* 3 => Complex Query\n* 4 => Complex Query\n* 6 => Custom search condition name"
+                                    },
+                                    "open_sta_ymdhi": {
+                                        "anyOf": [
+                                            {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "pattern": "^((([0-9]+)\\-(0[1-9]|1[0-2])\\-(0[1-9]|[1-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3]):(00|10|20|30|40|50):00)(Z|(\\+|-)([0-1][0-9]|2[0-3]):([0-5][0-9])))$"
+                                            },
+                                            {
+                                                "type": "string",
+                                                "pattern": "^$"
+                                            }
+                                        ],
+                                        "example": "2025-09-19T01:00:00+09:00",
+                                        "description": "公開開始日時"
+                                    },
+                                    "open_end_ymdhi": {
+                                        "anyOf": [
+                                            {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "pattern": "^((([0-9]+)\\-(0[1-9]|1[0-2])\\-(0[1-9]|[1-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3]):(00|10|20|30|40|50):00)(Z|(\\+|-)([0-1][0-9]|2[0-3]):([0-5][0-9])))$"
+                                            },
+                                            {
+                                                "type": "string",
+                                                "pattern": "^$"
+                                            }
+                                        ],
+                                        "example": "2025-09-19T01:00:00+09:00",
+                                        "description": "公開終了日時"
+                                    },
+                                    "ymd": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "日付"
+                                    },
+                                    "creditor": {
+                                        "description": "支払い者",
+                                        "anyOf": [
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "module_type": {
+                                                        "type": "string"
+                                                    },
+                                                    "module_id": {
+                                                        "type": "integer",
+                                                        "format": "int32",
+                                                        "minimum": -2147483648,
+                                                        "maximum": 2147483647
+                                                    }
+                                                },
+                                                "additionalProperties": false
+                                            },
+                                            {
+                                                "type": "integer",
+                                                "format": "int32",
+                                                "minimum": -2147483648,
+                                                "maximum": 2147483647
+                                            }
+                                        ],
+                                        "example": {
+                                            "module_type": "member",
+                                            "module_id": 0
+                                        }
+                                    },
+                                    "purpose": {
+                                        "description": "用途",
+                                        "type": "string",
+                                        "default": ""
+                                    },
+                                    "amount": {
+                                        "description": "清算総額",
+                                        "type": "string",
+                                        "default": ""
+                                    },
+                                    "payer": {
+                                        "type": "array",
+                                        "items": {
+                                            "description": "清算者",
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "module_type": {
+                                                            "type": "string"
+                                                        },
+                                                        "module_id": {
+                                                            "type": "integer",
+                                                            "format": "int32",
+                                                            "minimum": -2147483648,
+                                                            "maximum": 2147483647
+                                                        }
+                                                    },
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "type": "integer",
+                                                    "format": "int32",
+                                                    "minimum": -2147483648,
+                                                    "maximum": 2147483647
+                                                }
+                                            ],
+                                            "example": {
+                                                "module_type": "member",
+                                                "module_id": 0
+                                            }
+                                        },
+                                        "description": "清算者",
+                                        "default": [],
+                                        "minItems": 0,
+                                        "maxItems": 3
+                                    },
+                                    "rate": {
+                                        "type": "array",
+                                        "items": {
+                                            "description": "清算割合(%)",
+                                            "type": "string",
+                                            "default": ""
+                                        },
+                                        "description": "清算割合(%)",
+                                        "default": [],
+                                        "minItems": 0,
+                                        "maxItems": 3
+                                    },
+                                    "payment": {
+                                        "type": "array",
+                                        "items": {
+                                            "description": "清算金額",
+                                            "type": "string",
+                                            "default": ""
+                                        },
+                                        "description": "清算金額",
+                                        "default": [],
+                                        "minItems": 0,
+                                        "maxItems": 3
+                                    },
+                                    "paid": {
+                                        "type": "array",
+                                        "items": {
+                                            "description": "清算済みフラグ\n* 0 => 未清算\n* 1 => 清算済",
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "key": {
+                                                            "type": "string",
+                                                            "format": "",
+                                                            "enum": [
+                                                                "0",
+                                                                "1"
+                                                            ]
+                                                        },
+                                                        "label": {
+                                                            "type": "string",
+                                                            "format": "",
+                                                            "enum": [
+                                                                "未清算",
+                                                                "清算済"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "",
+                                                        "0",
+                                                        "1"
+                                                    ]
+                                                }
+                                            ],
+                                            "example": {
+                                                "key": "0",
+                                                "label": "未清算"
+                                            },
+                                            "default": "0"
+                                        },
+                                        "description": "清算済みフラグ",
+                                        "default": [],
+                                        "minItems": 0,
+                                        "maxItems": 3
+                                    },
+                                    "finished": {
+                                        "description": "清算完了フラグ\n* 0 => 未清算\n* 1 => 清算済",
+                                        "anyOf": [
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "key": {
+                                                        "type": "string",
+                                                        "format": "",
+                                                        "enum": [
+                                                            "0",
+                                                            "1"
+                                                        ]
+                                                    },
+                                                    "label": {
+                                                        "type": "string",
+                                                        "format": "",
+                                                        "enum": [
+                                                            "未清算",
+                                                            "清算済"
+                                                        ]
+                                                    }
+                                                },
+                                                "additionalProperties": false
+                                            },
+                                            {
+                                                "type": "string",
+                                                "enum": [
+                                                    "",
+                                                    "0",
+                                                    "1"
+                                                ]
+                                            }
+                                        ],
+                                        "example": {},
+                                        "default": ""
+                                    },
+                                    "validate_only": {
+                                        "type": "boolean",
+                                        "format": "",
+                                        "example": false,
+                                        "default": false,
+                                        "description": "入力チェックする"
+                                    },
+                                    "approvalflow_id": {
+                                        "type": "integer",
+                                        "format": "int64",
+                                        "description": "ワークフロー",
+                                        "example": 0
+                                    },
+                                    "_doc_waiting": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647,
+                                        "enum": [
+                                            null,
+                                            1
+                                        ],
+                                        "example": 1,
+                                        "default": null,
+                                        "description": "ワークフロー"
+                                    }
+                                },
+                                "additionalProperties": false
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rcms-api/7/members": {
+            "get": {
+                "tags": [
+                    "メンバー"
+                ],
+                "summary": "",
+                "description": "\n### **Member::list (v1)**\n\n\n## Controller parameters\n\n> **group_id** `107`\n",
+                "parameters": [
+                    {
+                        "name": "_output_format",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "形式 (json|xml|csv|zip)"
+                    },
+                    {
+                        "name": "_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "言語"
+                    },
+                    {
+                        "name": "_charset",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "文字コード"
+                    },
+                    {
+                        "name": "id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "format": "int32",
+                                "minimum": -2147483648,
+                                "maximum": 2147483647
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "メンバーID"
+                    },
+                    {
+                        "name": "cnt",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "1ページの行数"
+                    },
+                    {
+                        "name": "pageID",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "ページID"
+                    },
+                    {
+                        "name": "group_id[]",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "format": "int32",
+                                "minimum": -2147483648,
+                                "maximum": 2147483647
+                            },
+                            "minItems": 0
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "メンバー検索"
+                    },
+                    {
+                        "name": "filter",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "フィルタークエリ"
+                    },
+                    {
+                        "name": "order_query",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "並び順"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "メンバー一覧"
+                    },
+                    "400": {
+                        "description": "Input data is invalid"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    },
+                    "406": {
+                        "description": "Specified output format is not supported"
+                    }
+                },
+                "operationId": "getRcmsApi7Members"
+            }
+        }
+    },
+    "components": {
+        "schemas": {},
+        "securitySchemes": {}
+    }
+}

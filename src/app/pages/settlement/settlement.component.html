@@ -1,0 +1,263 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- ヘッダー -->
+  <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div class="flex items-center">
+          <h1 class="text-3xl font-bold text-gray-900">清算管理</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button
+            (click)="openCreateModal()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+          >
+            新規作成
+          </button>
+          <button
+            (click)="logout()"
+            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+          >
+            ログアウト
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <!-- ローディング状態 -->
+      <div *ngIf="isLoading" class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <span class="ml-3 text-gray-600">読み込み中...</span>
+      </div>
+
+      <!-- エラー状態 -->
+      <div *ngIf="errorMessage" class="rounded-md bg-red-50 p-4 mb-6">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">エラー</h3>
+            <div class="mt-2 text-sm text-red-700">{{ errorMessage }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- フィルター -->
+      <div *ngIf="!isLoading && !errorMessage" class="mb-6">
+        <div class="flex space-x-4">
+          <button
+            (click)="setFilter('unpaid')"
+            [class]="'px-4 py-2 rounded-md text-sm font-medium transition-colors ' + (currentFilter === 'unpaid' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300')"
+          >
+            未清算あり
+          </button>
+          <button
+            (click)="setFilter('paid')"
+            [class]="'px-4 py-2 rounded-md text-sm font-medium transition-colors ' + (currentFilter === 'paid' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300')"
+          >
+            清算済み
+          </button>
+          <button
+            (click)="setFilter('all')"
+            [class]="'px-4 py-2 rounded-md text-sm font-medium transition-colors ' + (currentFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300')"
+          >
+            全て
+          </button>
+        </div>
+      </div>
+
+      <!-- 全体清算状況サマリー（未清算ありの場合のみ表示） -->
+      <div *ngIf="!isLoading && !errorMessage && currentFilter === 'unpaid' && getOverallSettlementSummary().length > 0" class="mb-6">
+        <div class="bg-white shadow overflow-hidden sm:rounded-md">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">全体清算状況</h3>
+            <p class="text-sm text-gray-600">未清算の支払い一覧</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">清算者</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">支払い者</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">返金金額</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">件数</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let summary of getOverallSettlementSummary()" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {{ getMemberName(summary.liquidatorId) }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {{ getMemberName(summary.creditorId) }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-600">
+                    {{ summary.totalAmount }}円
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {{ summary.id.length }}件
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <button
+                      (click)="markSummaryAsPaid(summary); $event.stopPropagation()"
+                      [disabled]="isSubmitting"
+                      class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-3 py-1 rounded-md text-sm font-medium transition-colors"
+                    >
+                      <span *ngIf="!isSubmitting">一括清算する</span>
+                      <span *ngIf="isSubmitting">処理中...</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- コンテンツ一覧 -->
+      <div *ngIf="!isLoading && !errorMessage" class="bg-white shadow overflow-hidden sm:rounded-md">
+        <ul class="divide-y divide-gray-200">
+          <li *ngFor="let content of getFilteredContentList(); let i = index" 
+              class="px-6 py-4 cursor-pointer hover:bg-gray-50 transition-colors"
+              (click)="toggleContentExpansion(i)">
+            <!-- メイン情報 -->
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <!-- タイトル、カテゴリ -->
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-medium text-gray-900 truncate">
+                    {{ content.subject }}
+                  </h3>
+                  <span class="ml-3 px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                    {{ getCategoryName(content.contents_type) }}
+                  </span>
+                </div>
+                
+                <!-- 日付、支払い者、未精算の清算者 -->
+                <div class="flex items-center text-sm text-gray-600 space-x-4">
+                  <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    {{ content.ymd }}
+                  </div>
+                  
+                  <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    支払い者: {{ getMemberName(content.creditor?.module_id) }}
+                  </div>
+                  
+                  <div class="flex items-center" *ngIf="getUnpaidLiquidators(content).length > 0">
+                    <svg class="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-red-600 font-medium">
+                      未精算: {{ getUnpaidLiquidatorNames(content) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- 金額と編集ボタン -->
+              <div class="ml-4 flex-shrink-0 flex items-center space-x-3">
+                <span class="px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
+                  {{ content.amount }}円
+                </span>
+                <button
+                  (click)="openEditModal(content); $event.stopPropagation()"
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm font-medium transition-colors"
+                >
+                  編集
+                </button>
+              </div>
+            </div>
+            
+            <!-- 展開可能な詳細情報 -->
+            <div *ngIf="expandedContentIndex === i" class="mt-4 pt-4 border-t border-gray-200">
+              <div class="space-y-4">
+                <!-- 用途 -->
+                <div>
+                  <h4 class="text-sm font-medium text-gray-700 mb-1">用途</h4>
+                  <p class="text-sm text-gray-600">{{ content.purpose || '未設定' }}</p>
+                </div>
+                
+                <!-- 清算状況表（未清算ありの場合のみ表示） -->
+                <div *ngIf="getUnpaidLiquidators(content).length > 0">
+                  <h4 class="text-sm font-medium text-gray-700 mb-3">清算状況</h4>
+                  <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-gray-50">
+                        <tr>
+                          <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">清算者</th>
+                          <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">割合</th>
+                          <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">金額</th>
+                          <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状態</th>
+                        </tr>
+                      </thead>
+                      <tbody class="bg-white divide-y divide-gray-200">
+                        <tr *ngFor="let liquidation of content.liquidation" 
+                            [class]="liquidation.paid?.key === '0' || liquidation.paid === 0 ? 'bg-red-50' : 'bg-green-50'">
+                          <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ getMemberName(liquidation.payer?.module_id) }}
+                          </td>
+                          <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                            {{ liquidation.rate }}%
+                          </td>
+                          <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                            {{ liquidation.payment }}円
+                          </td>
+                          <td class="px-3 py-2 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full"
+                                  [class]="liquidation.paid?.key === '1' || liquidation.paid === 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                              {{ liquidation.paid?.key === '1' || liquidation.paid === 1 ? '清算済' : '未清算' }}
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        
+        <!-- 空の状態 -->
+        <div *ngIf="getFilteredContentList().length === 0" class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">コンテンツがありません</h3>
+          <p class="mt-1 text-sm text-gray-500">新しい清算コンテンツを作成してください。</p>
+          <div class="mt-6">
+            <button
+              (click)="openCreateModal()"
+              class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            >
+              新規作成
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- モーダルコンポーネント -->
+  <app-content-modal
+    [showModal]="showModal"
+    [isEditMode]="isEditMode"
+    [isSubmitting]="isSubmitting"
+    [modalData]="modalData"
+    (modalSubmit)="onModalSubmit($event)"
+    (modalClose)="closeModal()"
+  ></app-content-modal>
+</div>

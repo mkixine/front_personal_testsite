@@ -1,0 +1,57 @@
+# Cursor AI 許可コマンドリスト
+
+## 許可されたコマンド
+以下のコマンドは常時実行を許可されています：
+
+### パッケージ管理
+- npm install
+- npm uninstall
+- npm update
+- npm run build
+- npm run start
+- npm run test
+- npm run lint
+
+### Angular CLI
+- ng build
+- ng serve
+- ng test
+- ng lint
+- ng generate
+- ng add
+
+### ファイル操作
+- mkdir
+- mv
+- cp
+- touch
+- ls
+- cat
+- grep
+- find
+
+### Git操作
+- git add
+- git commit
+- git push
+- git pull
+- git status
+- git log
+- git diff
+
+### システム情報
+- node --version
+- npm --version
+- pwd
+- whoami
+
+## 制限事項
+- システムファイルの削除は禁止
+- 環境変数の変更は禁止
+- ネットワーク設定の変更は禁止
+- 管理者権限が必要なコマンドは禁止
+
+## 特別許可
+- プロジェクト内でのファイル作成・編集は許可
+- 依存関係の追加・削除は許可
+- 設定ファイルの変更は許可
