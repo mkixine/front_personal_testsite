@@ -62,9 +62,6 @@
                 },
                 "serve": {
                     "builder": "@angular/build:dev-server",
-                    "options": {
-                        "ssr": false
-                    },
                     "configurations": {
                         "production": {
                             "buildTarget": "front-personal-testsite:build:production"
