@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError, retry, catchError, timeout } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiBaseService {
-  private readonly baseUrl = 'https://mkixine-json.g.kuroco.app';
+  private readonly baseUrl = environment.apiBaseUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(protected http: HttpClient) {}
 
   /**
    * GETリクエストを送信
@@ -19,7 +20,11 @@ export class ApiBaseService {
     return this.http.get<T>(url, { 
       params: httpParams,
       withCredentials: true // Cookieを送信
-    });
+    }).pipe(
+      timeout(environment.apiTimeout),
+      retry(environment.maxRetryAttempts),
+      catchError(this.handleError)
+    );
   }
 
   /**
@@ -35,7 +40,11 @@ export class ApiBaseService {
       headers, 
       params: httpParams,
       withCredentials: true // Cookieを送信
-    });
+    }).pipe(
+      timeout(environment.apiTimeout),
+      retry(environment.maxRetryAttempts),
+      catchError(this.handleError)
+    );
   }
 
   /**
@@ -60,5 +69,41 @@ export class ApiBaseService {
     }
     
     return httpParams;
+  }
+
+  /**
+   * エラーハンドリング
+   */
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = '予期しないエラーが発生しました。';
+    
+    if (typeof ErrorEvent !== 'undefined' && error.error instanceof ErrorEvent) {
+      // クライアントサイドエラー
+      errorMessage = `エラー: ${error.error.message}`;
+    } else {
+      // サーバーサイドエラー
+      switch (error.status) {
+        case 401:
+          errorMessage = '認証に失敗しました。ログインし直してください。';
+          break;
+        case 403:
+          errorMessage = 'アクセス権限がありません。';
+          break;
+        case 404:
+          errorMessage = 'リソースが見つかりません。';
+          break;
+        case 500:
+          errorMessage = 'サーバーエラーが発生しました。しばらく時間をおいて再試行してください。';
+          break;
+        default:
+          errorMessage = `エラーが発生しました (${error.status})`;
+      }
+    }
+    
+    if (environment.enableLogging) {
+      console.error('API Error:', error);
+    }
+    
+    return throwError(() => new Error(errorMessage));
   }
 }

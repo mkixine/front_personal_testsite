@@ -204,6 +204,10 @@ export class SettlementComponent implements OnInit {
     }
   }
 
+  goToProfile(): void {
+    this.router.navigate(['/profile']);
+  }
+
   logout(): void {
     this.authService.logout().subscribe({
       next: (response) => {

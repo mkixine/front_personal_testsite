@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map, catchError, of } from 'rxjs';
 import { ApiBaseService } from './api-base.service';
 import { LoginRequest, LoginResponse, ProfileResponse, CommonApiParams } from '../models/api.types';
 
@@ -7,6 +8,10 @@ import { LoginRequest, LoginResponse, ProfileResponse, CommonApiParams } from '.
   providedIn: 'root'
 })
 export class AuthService extends ApiBaseService {
+
+  constructor(http: HttpClient) {
+    super(http);
+  }
 
   /**
    * ログイン
@@ -35,5 +40,15 @@ export class AuthService extends ApiBaseService {
    */
   logout(params?: CommonApiParams): Observable<any> {
     return this.post<any>('/rcms-api/7/logout', {}, params);
+  }
+
+  /**
+   * 認証状態をチェック
+   */
+  checkAuthStatus(): Observable<boolean> {
+    return this.getProfile().pipe(
+      map(() => true),
+      catchError(() => of(false))
+    );
   }
 }
