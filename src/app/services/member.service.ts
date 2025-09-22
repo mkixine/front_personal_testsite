@@ -3,6 +3,15 @@ import { Observable } from 'rxjs';
 import { ApiBaseService } from './api-base.service';
 import { MemberListParams, MemberResponse } from '../models/api.types';
 
+export interface ProfileUpdateRequest {
+  email?: string;
+  login_pwd?: string;
+  group_id?: number[];
+  login_ok_flg?: number;
+  validate_only?: boolean;
+  auto_login?: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -43,5 +52,14 @@ export class MemberService extends ApiBaseService {
       ...params
     };
     return this.getMemberList(requestParams);
+  }
+
+  /**
+   * プロフィール更新
+   * @param updateData 更新データ
+   * @returns 更新結果
+   */
+  updateProfile(updateData: ProfileUpdateRequest): Observable<any> {
+    return this.post<any>('/rcms-api/7/ipass', updateData);
   }
 }

@@ -413,9 +413,11 @@
                                                 "maximum": 2147483647,
                                                 "default": 27,
                                                 "example": 27,
-                                                "description": "カテゴリID\n* 27 => カスタム",
+                                                "description": "カテゴリID\n* 27 => カスタム\n* 28 => レイアウト\n* 29 => 模型購入",
                                                 "enum": [
-                                                    27
+                                                    27,
+                                                    28,
+                                                    29
                                                 ]
                                             },
                                             {
@@ -427,9 +429,11 @@
                                                     "maximum": 2147483647,
                                                     "default": 27,
                                                     "example": 27,
-                                                    "description": "カテゴリID\n* 27 => カスタム",
+                                                    "description": "カテゴリID\n* 27 => カスタム\n* 28 => レイアウト\n* 29 => 模型購入",
                                                     "enum": [
-                                                        27
+                                                        27,
+                                                        28,
+                                                        29
                                                     ]
                                                 },
                                                 "minItems": 1,
@@ -524,7 +528,7 @@
                                                 "pattern": "^$"
                                             }
                                         ],
-                                        "example": "2025-09-19T01:00:00+09:00",
+                                        "example": "2025-09-23T06:00:00+09:00",
                                         "description": "公開開始日時"
                                     },
                                     "open_end_ymdhi": {
@@ -539,7 +543,7 @@
                                                 "pattern": "^$"
                                             }
                                         ],
-                                        "example": "2025-09-19T01:00:00+09:00",
+                                        "example": "2025-09-23T06:00:00+09:00",
                                         "description": "公開終了日時"
                                     },
                                     "ymd": {
@@ -750,7 +754,8 @@
                                 "required": [
                                     "subject",
                                     "creditor",
-                                    "amount"
+                                    "amount",
+                                    "finished"
                                 ]
                             }
                         }
@@ -764,7 +769,7 @@
                     "コンテンツ"
                 ],
                 "summary": "",
-                "description": "\n### **Topics::list (v1)**\n\n\n## Controller parameters\n\n> **ext_group** `true`\n\n> **topics_group_id** `16`\n\n> **cnt** `0`\n",
+                "description": "\n### **Topics::list (v1)**\n\n\n## Controller parameters\n\n> **ext_group** `true`\n\n> **filter_request_allow_list** `finished`\n\n> **topics_group_id** `16`\n\n> **cnt** `0`\n",
                 "parameters": [
                     {
                         "name": "_output_format",
@@ -1432,9 +1437,11 @@
                                                 "maximum": 2147483647,
                                                 "default": 27,
                                                 "example": 27,
-                                                "description": "カテゴリID\n* 27 => カスタム",
+                                                "description": "カテゴリID\n* 27 => カスタム\n* 28 => レイアウト\n* 29 => 模型購入",
                                                 "enum": [
-                                                    27
+                                                    27,
+                                                    28,
+                                                    29
                                                 ]
                                             },
                                             {
@@ -1446,9 +1453,11 @@
                                                     "maximum": 2147483647,
                                                     "default": 27,
                                                     "example": 27,
-                                                    "description": "カテゴリID\n* 27 => カスタム",
+                                                    "description": "カテゴリID\n* 27 => カスタム\n* 28 => レイアウト\n* 29 => 模型購入",
                                                     "enum": [
-                                                        27
+                                                        27,
+                                                        28,
+                                                        29
                                                     ]
                                                 },
                                                 "minItems": 1,
@@ -1543,7 +1552,7 @@
                                                 "pattern": "^$"
                                             }
                                         ],
-                                        "example": "2025-09-19T01:00:00+09:00",
+                                        "example": "2025-09-23T06:00:00+09:00",
                                         "description": "公開開始日時"
                                     },
                                     "open_end_ymdhi": {
@@ -1558,7 +1567,7 @@
                                                 "pattern": "^$"
                                             }
                                         ],
-                                        "example": "2025-09-19T01:00:00+09:00",
+                                        "example": "2025-09-23T06:00:00+09:00",
                                         "description": "公開終了日時"
                                     },
                                     "ymd": {
@@ -1776,6 +1785,149 @@
                                         "example": 1,
                                         "default": null,
                                         "description": "ワークフロー"
+                                    }
+                                },
+                                "additionalProperties": false
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rcms-api/7/ipass": {
+            "post": {
+                "tags": [
+                    "メンバー"
+                ],
+                "summary": "",
+                "description": "\n### **Member::update (v1)**\n\n\n## Controller parameters\n\n> **self_only** `true`\n\n> **allowed_group_ids** `107`\n\n> **use_columns** `login_pwd,email`\n",
+                "parameters": [
+                    {
+                        "name": "_output_format",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "形式 (json|xml|csv|zip)"
+                    },
+                    {
+                        "name": "_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "言語"
+                    },
+                    {
+                        "name": "_charset",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "文字コード"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "My member infomation is updated"
+                    },
+                    "400": {
+                        "description": "Input data is invalid"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    },
+                    "404": {
+                        "description": "Member was not found"
+                    },
+                    "406": {
+                        "description": "Specified output format is not supported"
+                    },
+                    "422": {
+                        "description": "The request was well-formed but was unable to be followed due to semantic errors"
+                    }
+                },
+                "operationId": "postRcmsApi7Ipass",
+                "requestBody": {
+                    "required": true,
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "current_password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "current_password",
+                                        "default": "",
+                                        "description": "/label/current_password"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "",
+                                        "description": "メールアドレス",
+                                        "example": "test@example.jp",
+                                        "pattern": "^([a-zA-Z0-9.+!#$&*=?^_{|}~-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})?$"
+                                    },
+                                    "login_pwd": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "description": "login_pwd"
+                                    },
+                                    "group_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "minimum": -2147483648,
+                                            "maximum": 2147483647,
+                                            "enum": [
+                                                107
+                                            ]
+                                        },
+                                        "minItems": 0,
+                                        "description": "/modules/group",
+                                        "example": [],
+                                        "default": []
+                                    },
+                                    "login_ok_flg": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647,
+                                        "description": "/label/login_ok_flg",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1,
+                                        "default": 1
+                                    },
+                                    "validate_only": {
+                                        "type": "boolean",
+                                        "format": "",
+                                        "example": false,
+                                        "default": false,
+                                        "description": "入力チェックする"
+                                    },
+                                    "auto_login": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "minimum": -2147483648,
+                                        "maximum": 2147483647
                                     }
                                 },
                                 "additionalProperties": false

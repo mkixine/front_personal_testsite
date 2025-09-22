@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { ContentService } from '../../services/content.service';
 import { AuthService } from '../../services/auth.service';
 import { MemberService } from '../../services/member.service';
 import { CategoryService } from '../../services/category.service';
-import { ContentResponse, ContentRequest, ContentLiquidationRequest, ContentListParams, LiquidationItem } from '../../models/api.types';
+import { ContentResponse, ContentRequest, ContentLiquidationRequest, ContentListParams, LiquidationItem, ContentItem, MemberItem, CategoryItem } from '../../models/api.types';
 import { ContentModalComponent } from '../../components/content-modal/content-modal.component';
 
 interface SummaryItem  {
@@ -21,10 +22,13 @@ interface SummaryItem  {
   standalone: true,
   imports: [CommonModule, FormsModule, ContentModalComponent],
   templateUrl: './settlement.component.html',
-  styles: []
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettlementComponent implements OnInit {
-  contentList: any[] = [];
+export class SettlementComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
+  contentList: ContentItem[] = [];
   isLoading: boolean = false;
   errorMessage: string = '';
   
@@ -42,7 +46,6 @@ export class SettlementComponent implements OnInit {
     open_flg: 1,
     creditor: 0,
     finished: "0",
-    // 清算者情報を初期化
     liquidation: []
   };
   editingContentId: string = '';
@@ -51,8 +54,8 @@ export class SettlementComponent implements OnInit {
   expandedContentIndex: number | null = null;
   
   // メンバーとカテゴリのキャッシュ
-  members: any[] = [];
-  categories: any[] = [];
+  members: MemberItem[] = [];
+  categories: CategoryItem[] = [];
   
   // フィルター状態
   currentFilter: 'all' | 'unpaid' | 'paid' = 'unpaid';
@@ -71,6 +74,11 @@ export class SettlementComponent implements OnInit {
     // メンバーとカテゴリを読み込み
     this.loadMembers();
     this.loadCategories();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private checkAuthAndLoadContent(): void {
@@ -216,6 +224,10 @@ export class SettlementComponent implements OnInit {
         this.router.navigate(['/login']);
       }
     });
+  }
+
+  goToProfile(): void {
+    this.router.navigate(['/profile']);
   }
 
   // 展開状態の切り替え
@@ -369,7 +381,7 @@ export class SettlementComponent implements OnInit {
 
     // 各コンテンツを順次更新
     targetContentIds.forEach((contentId: string) => {
-      const content = this.contentList.find(c => c.topics_id === contentId || c.id === contentId);
+      const content = this.contentList.find(c => String(c.topics_id) === contentId);
       if (!content) {
         completedUpdates++;
         if (completedUpdates === totalUpdates) {
