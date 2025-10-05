@@ -6,8 +6,20 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  // レスポンスの型は実際のAPIレスポンスに応じて調整
-  [key: string]: any;
+  grant_token: string;
+}
+
+export interface TokenRequest {
+  grant_token: string;
+}
+
+export interface AccessToken {
+  value: string;
+  expiresAt: number;
+}
+
+export interface TokenResponse {
+  access_token: AccessToken;
 }
 
 export interface ProfileResponse {

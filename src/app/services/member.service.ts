@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiBaseService } from './api-base.service';
+import { AuthService } from './auth.service';
 import { MemberListParams, MemberResponse } from '../models/api.types';
 
 export interface ProfileUpdateRequest {
@@ -17,13 +19,17 @@ export interface ProfileUpdateRequest {
 })
 export class MemberService extends ApiBaseService {
 
+  constructor(protected override http: HttpClient, private authService: AuthService) {
+    super(http);
+  }
+
   /**
    * メンバー一覧取得
    * @param params 一覧取得パラメータ
    * @returns メンバー一覧
    */
   getMemberList(params?: MemberListParams): Observable<MemberResponse> {
-    return this.get<MemberResponse>('/rcms-api/7/members', params);
+    return this.get<MemberResponse>('/rcms-api/7/members', params, this.authService);
   }
 
   /**
@@ -60,6 +66,6 @@ export class MemberService extends ApiBaseService {
    * @returns 更新結果
    */
   updateProfile(updateData: ProfileUpdateRequest): Observable<any> {
-    return this.post<any>('/rcms-api/7/ipass', updateData);
+    return this.post<any>('/rcms-api/7/ipass', updateData, undefined, this.authService);
   }
 }

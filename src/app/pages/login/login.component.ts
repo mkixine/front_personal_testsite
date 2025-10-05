@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { LoginRequest } from '../../models/api.types';
+import { LoginRequest, TokenResponse } from '../../models/api.types';
 
 @Component({
   selector: 'app-login',
@@ -145,8 +145,10 @@ export class LoginComponent implements OnInit {
     this.loginData.login_save = this.rememberMe ? 1 : 0;
 
     this.authService.login(this.loginData).subscribe({
-      next: (response) => {
+      next: (response: TokenResponse) => {
         console.log('ログイン成功:', response);
+        console.log('アクセストークン:', response.access_token.value);
+        console.log('有効期限:', new Date(response.access_token.expiresAt * 1000));
         this.router.navigate(['/settlement']);
       },
       error: (error) => {

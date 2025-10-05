@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, retry, catchError, timeout } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +15,14 @@ export class ApiBaseService {
   /**
    * GETリクエストを送信
    */
-  protected get<T>(endpoint: string, params?: any): Observable<T> {
+  protected get<T>(endpoint: string, params?: any, authService?: AuthService): Observable<T> {
     const url = `${this.baseUrl}${endpoint}`;
     const httpParams = this.buildHttpParams(params);
+    const headers = this.buildHeaders(authService);
+    
     return this.http.get<T>(url, { 
-      params: httpParams,
-      withCredentials: true // Cookieを送信
+      headers,
+      params: httpParams
     }).pipe(
       timeout(environment.apiTimeout),
       retry(environment.maxRetryAttempts),
@@ -30,21 +33,38 @@ export class ApiBaseService {
   /**
    * POSTリクエストを送信
    */
-  protected post<T>(endpoint: string, body: any, params?: any): Observable<T> {
+  protected post<T>(endpoint: string, body: any, params?: any, authService?: AuthService): Observable<T> {
     const url = `${this.baseUrl}${endpoint}`;
     const httpParams = this.buildHttpParams(params);
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+    const headers = this.buildHeaders(authService);
+    
     return this.http.post<T>(url, body, { 
       headers, 
-      params: httpParams,
-      withCredentials: true // Cookieを送信
+      params: httpParams
     }).pipe(
       timeout(environment.apiTimeout),
       retry(environment.maxRetryAttempts),
       catchError(this.handleError)
     );
+  }
+
+  /**
+   * ヘッダーを構築
+   */
+  protected buildHeaders(authService?: AuthService): HttpHeaders {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    // アクセストークンが有効な場合は追加
+    if (authService && authService.isTokenValid()) {
+      const accessToken = authService.getAccessToken();
+      if (accessToken) {
+        headers = headers.set('X-RCMS-API-ACCESS-TOKEN', accessToken);
+      }
+    }
+
+    return headers;
   }
 
   /**
