@@ -172,6 +172,11 @@
                         "description": "Specified output format is not supported"
                     }
                 },
+                "security": [
+                    {
+                        "Token-Auth": []
+                    }
+                ],
                 "operationId": "postRcmsApi7Logout"
             }
         },
@@ -181,7 +186,7 @@
                     "認証"
                 ],
                 "summary": "",
-                "description": "\n### **Login::profile (v1)**\n\n\n## Controller parameters\n\n> **basic_info** `nickname`\n",
+                "description": "\n### **Login::profile (v1)**\n\n\n## Controller parameters\n\n> **basic_info** `nickname,email`\n",
                 "parameters": [
                     {
                         "name": "_output_format",
@@ -231,7 +236,91 @@
                         "description": "Specified output format is not supported"
                     }
                 },
+                "security": [
+                    {
+                        "Token-Auth": []
+                    }
+                ],
                 "operationId": "getRcmsApi7Profile"
+            }
+        },
+        "/rcms-api/7/token": {
+            "post": {
+                "tags": [
+                    "認証"
+                ],
+                "summary": "",
+                "description": "\n### **Login::token (v1)**\n\n",
+                "parameters": [
+                    {
+                        "name": "_output_format",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "形式 (json|xml|csv|zip)"
+                    },
+                    {
+                        "name": "_lang",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "言語"
+                    },
+                    {
+                        "name": "_charset",
+                        "schema": {
+                            "type": "string",
+                            "format": ""
+                        },
+                        "in": "query",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "description": "文字コード"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token successfully generated"
+                    },
+                    "401": {
+                        "description": "Unauthorized error"
+                    },
+                    "406": {
+                        "description": "Specified output format is not supported"
+                    }
+                },
+                "operationId": "postRcmsApi7Token",
+                "requestBody": {
+                    "required": true,
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "grant_token": {
+                                        "type": "string",
+                                        "default": "",
+                                        "example": "",
+                                        "description": "リソース付与トークン"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/rcms-api/7/categories": {
@@ -312,6 +401,11 @@
                         "description": "Topics category data successfully fetched"
                     }
                 },
+                "security": [
+                    {
+                        "Token-Auth": []
+                    }
+                ],
                 "operationId": "getRcmsApi7Categories"
             }
         },
@@ -383,6 +477,11 @@
                         "description": "The request was well-formed but was unable to be followed due to semantic errors"
                     }
                 },
+                "security": [
+                    {
+                        "Token-Auth": []
+                    }
+                ],
                 "operationId": "postRcmsApi7Insert",
                 "requestBody": {
                     "required": true,
@@ -528,7 +627,7 @@
                                                 "pattern": "^$"
                                             }
                                         ],
-                                        "example": "2025-09-23T06:00:00+09:00",
+                                        "example": "2025-10-05T16:00:00+09:00",
                                         "description": "公開開始日時"
                                     },
                                     "open_end_ymdhi": {
@@ -543,13 +642,27 @@
                                                 "pattern": "^$"
                                             }
                                         ],
-                                        "example": "2025-09-23T06:00:00+09:00",
+                                        "example": "2025-10-05T16:00:00+09:00",
                                         "description": "公開終了日時"
                                     },
                                     "ymd": {
                                         "type": "string",
                                         "format": "date",
                                         "description": "日付"
+                                    },
+                                    "tag_id": {
+                                        "type": "array",
+                                        "uniqueItems": true,
+                                        "items": {
+                                            "type": "integer",
+                                            "enum": [
+                                                2
+                                            ]
+                                        },
+                                        "example": [
+                                            0
+                                        ],
+                                        "description": "タグID\n* 2 => タグ"
                                     },
                                     "creditor": {
                                         "description": "支払い者",
@@ -1323,6 +1436,11 @@
                         "description": "Specified output format is not supported"
                     }
                 },
+                "security": [
+                    {
+                        "Token-Auth": []
+                    }
+                ],
                 "operationId": "getRcmsApi7List"
             }
         },
@@ -1407,6 +1525,11 @@
                         "description": "The request was well-formed but was unable to be followed due to semantic errors"
                     }
                 },
+                "security": [
+                    {
+                        "Token-Auth": []
+                    }
+                ],
                 "operationId": "postRcmsApi7UpdateTopicsId",
                 "requestBody": {
                     "required": true,
@@ -1552,7 +1675,7 @@
                                                 "pattern": "^$"
                                             }
                                         ],
-                                        "example": "2025-09-23T06:00:00+09:00",
+                                        "example": "2025-10-05T16:00:00+09:00",
                                         "description": "公開開始日時"
                                     },
                                     "open_end_ymdhi": {
@@ -1567,13 +1690,27 @@
                                                 "pattern": "^$"
                                             }
                                         ],
-                                        "example": "2025-09-23T06:00:00+09:00",
+                                        "example": "2025-10-05T16:00:00+09:00",
                                         "description": "公開終了日時"
                                     },
                                     "ymd": {
                                         "type": "string",
                                         "format": "date",
                                         "description": "日付"
+                                    },
+                                    "tag_id": {
+                                        "type": "array",
+                                        "uniqueItems": true,
+                                        "items": {
+                                            "type": "integer",
+                                            "enum": [
+                                                2
+                                            ]
+                                        },
+                                        "example": [
+                                            0
+                                        ],
+                                        "description": "タグID\n* 2 => タグ"
                                     },
                                     "creditor": {
                                         "description": "支払い者",
@@ -1859,6 +1996,11 @@
                         "description": "The request was well-formed but was unable to be followed due to semantic errors"
                     }
                 },
+                "security": [
+                    {
+                        "Token-Auth": []
+                    }
+                ],
                 "operationId": "postRcmsApi7Ipass",
                 "requestBody": {
                     "required": true,
@@ -1928,6 +2070,20 @@
                                         "format": "int32",
                                         "minimum": -2147483648,
                                         "maximum": 2147483647
+                                    },
+                                    "tag_id": {
+                                        "type": "array",
+                                        "uniqueItems": true,
+                                        "items": {
+                                            "type": "integer",
+                                            "enum": [
+                                                2
+                                            ]
+                                        },
+                                        "example": [
+                                            0
+                                        ],
+                                        "description": "タグID\n* 2 => タグ"
                                     }
                                 },
                                 "additionalProperties": false
@@ -2084,12 +2240,23 @@
                         "description": "Specified output format is not supported"
                     }
                 },
+                "security": [
+                    {
+                        "Token-Auth": []
+                    }
+                ],
                 "operationId": "getRcmsApi7Members"
             }
         }
     },
     "components": {
         "schemas": {},
-        "securitySchemes": {}
+        "securitySchemes": {
+            "Token-Auth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-RCMS-API-ACCESS-TOKEN"
+            }
+        }
     }
 }

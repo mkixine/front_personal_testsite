@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiBaseService } from './api-base.service';
+import { AuthService } from './auth.service';
 import { 
   ContentRequest, 
   ContentResponse, 
@@ -14,6 +16,10 @@ import {
 })
 export class ContentService extends ApiBaseService {
 
+  constructor(protected override http: HttpClient, private authService: AuthService) {
+    super(http);
+  }
+
   /**
    * コンテンツ作成
    * @param contentData コンテンツデータ
@@ -21,7 +27,7 @@ export class ContentService extends ApiBaseService {
    * @returns 作成レスポンス
    */
   createContent(contentData: ContentRequest, params?: CommonApiParams): Observable<ContentResponse> {
-    return this.post<ContentResponse>('/rcms-api/7/insert', contentData, params);
+    return this.post<ContentResponse>('/rcms-api/7/insert', contentData, params, this.authService);
   }
 
   /**
@@ -30,7 +36,7 @@ export class ContentService extends ApiBaseService {
    * @returns コンテンツ一覧
    */
   getContentList(params?: ContentListParams): Observable<ContentResponse> {
-    return this.get<ContentResponse>('/rcms-api/7/list', params);
+    return this.get<ContentResponse>('/rcms-api/7/list', params, this.authService);
   }
 
   /**
@@ -45,7 +51,7 @@ export class ContentService extends ApiBaseService {
     contentData: ContentRequest | ContentLiquidationRequest, 
     params?: CommonApiParams
   ): Observable<ContentResponse> {
-    return this.post<ContentResponse>(`/rcms-api/7/update/${topicsId}`, contentData, params);
+    return this.post<ContentResponse>(`/rcms-api/7/update/${topicsId}`, contentData, params, this.authService);
   }
 
 }
