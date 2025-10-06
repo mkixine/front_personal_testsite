@@ -1,7 +1,6 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of, switchMap } from 'rxjs';
-import { isPlatformBrowser } from '@angular/common';
 import { ApiBaseService } from './api-base.service';
 import { LoginRequest, LoginResponse, TokenRequest, TokenResponse, ProfileResponse, CommonApiParams } from '../models/api.types';
 
@@ -12,12 +11,11 @@ export class AuthService extends ApiBaseService {
   private accessToken: string | null = null;
   private tokenExpiresAt: number | null = null;
 
-  constructor(http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(http: HttpClient) {
     super(http);
-    // ブラウザ環境でのみローカルストレージからトークンを復元
-    if (isPlatformBrowser(this.platformId)) {
-      this.loadTokenFromStorage();
-    }
+    // メモリに保存されたトークンは初期化時にクリア
+    this.accessToken = null;
+    this.tokenExpiresAt = null;
   }
 
   /**
@@ -116,11 +114,7 @@ export class AuthService extends ApiBaseService {
     this.accessToken = token;
     this.tokenExpiresAt = expiresAt;
     
-    // ブラウザ環境でのみローカルストレージに保存
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('rcms_access_token', token);
-      localStorage.setItem('rcms_token_expires_at', expiresAt.toString());
-    }
+    // メモリにのみ保存（localStorageは使用しない）
   }
 
   /**
@@ -130,34 +124,7 @@ export class AuthService extends ApiBaseService {
     this.accessToken = null;
     this.tokenExpiresAt = null;
     
-    // ブラウザ環境でのみローカルストレージから削除
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('rcms_access_token');
-      localStorage.removeItem('rcms_token_expires_at');
-    }
+    // メモリから削除（localStorageは使用しない）
   }
 
-  /**
-   * ローカルストレージからトークンを復元
-   */
-  private loadTokenFromStorage(): void {
-    // ブラウザ環境でのみローカルストレージから読み取り
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-    
-    const token = localStorage.getItem('rcms_access_token');
-    const expiresAtStr = localStorage.getItem('rcms_token_expires_at');
-    
-    if (token && expiresAtStr) {
-      const expiresAt = parseInt(expiresAtStr, 10);
-      if (expiresAt > Math.floor(Date.now() / 1000)) {
-        this.accessToken = token;
-        this.tokenExpiresAt = expiresAt;
-      } else {
-        // 期限切れのトークンは削除
-        this.clearAccessToken();
-      }
-    }
-  }
 }
