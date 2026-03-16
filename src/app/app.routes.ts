@@ -18,6 +18,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
   },
   {
+    path: 'calendar',
+    loadComponent: () => import('./pages/calendar/calendar.component').then(m => m.CalendarComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

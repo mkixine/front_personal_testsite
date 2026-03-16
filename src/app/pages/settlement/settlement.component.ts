@@ -208,6 +208,10 @@ export class SettlementComponent implements OnInit {
     this.router.navigate(['/profile']);
   }
 
+  goToCalendar(): void {
+    this.router.navigate(['/calendar']);
+  }
+
   logout(): void {
     this.authService.logout().subscribe({
       next: (response) => {
