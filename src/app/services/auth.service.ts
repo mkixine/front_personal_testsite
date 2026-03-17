@@ -39,6 +39,7 @@ export class AuthService extends ApiBaseService {
       map((tokenResponse: TokenResponse) => {
         // 3. アクセストークンを保存
         this.setAccessToken(tokenResponse.access_token.value, tokenResponse.access_token.expiresAt);
+        this.setRefreshToken(tokenResponse.refresh_token.value, tokenResponse.refresh_token.expiresAt);
         return tokenResponse;
       })
     );
@@ -92,19 +93,49 @@ export class AuthService extends ApiBaseService {
    * アクセストークンを取得
    */
   getAccessToken(): string | null {
-    return this.accessToken;
+    return this.isTokenValid() ? this.accessToken || this.getLocalStorage('accessToken') : null;
   }
 
+  getAccessTokenFromRefreshToken(): Observable<string | null> {
+    return this.isRefreshTokenValid() ?  this.post<TokenResponse>(
+        '/rcms-api/7/token', {
+            refresh_token: this.getRefreshToken()
+        }, [], this, true).pipe(
+            map((tokenResponse: TokenResponse) => {
+                this.setAccessToken(tokenResponse.access_token.value, tokenResponse.access_token.expiresAt);
+                this.setRefreshToken(tokenResponse.refresh_token.value, tokenResponse.refresh_token.expiresAt);
+                return this.getAccessToken();
+            }),
+            catchError((error) => {
+                console.error(error);
+                return of(null);
+            })
+        ): of(null);
+  }
+
+  getRefreshToken(): string | null {
+    return this.getLocalStorage('refreshToken');
+  }  
+
+  getTokenExpiresAt(): number | null {
+    return this.tokenExpiresAt ?? parseInt(this.getLocalStorage('tokenExpiresAt') ?? '0');
+  }
+
+  getRefreshTokenExpiresAt(): number | null {
+    return parseInt(this.getLocalStorage('refreshTokenExpiresAt') ?? '0');
+  }
   /**
    * アクセストークンが有効かチェック
    */
   isTokenValid(): boolean {
-    if (!this.accessToken || !this.tokenExpiresAt) {
-      return false;
-    }
-    
+    const tokenExpiresAt = this.getTokenExpiresAt();
     const now = Math.floor(Date.now() / 1000);
-    return this.tokenExpiresAt > now;
+    return !!tokenExpiresAt && tokenExpiresAt > now;
+  }
+  isRefreshTokenValid(): boolean {
+    const refreshTokenExpiresAt = this.getRefreshTokenExpiresAt();
+    const now = Math.floor(Date.now() / 1000);
+    return !!refreshTokenExpiresAt && refreshTokenExpiresAt > now;
   }
 
   /**
@@ -114,7 +145,14 @@ export class AuthService extends ApiBaseService {
     this.accessToken = token;
     this.tokenExpiresAt = expiresAt;
     
-    // メモリにのみ保存（localStorageは使用しない）
+    this.setLocalStorage('accessToken', token);
+    this.setLocalStorage('tokenExpiresAt', expiresAt.toString());
+    
+  }
+  
+  private setRefreshToken(token: string, expiresAt: number): void {
+    this.setLocalStorage('refreshToken', token);
+    this.setLocalStorage('refreshTokenExpiresAt', expiresAt.toString());
   }
 
   /**
@@ -124,7 +162,25 @@ export class AuthService extends ApiBaseService {
     this.accessToken = null;
     this.tokenExpiresAt = null;
     
-    // メモリから削除（localStorageは使用しない）
+    this.removeLocalStorage('accessToken');
+    this.removeLocalStorage('refreshToken');
+    this.removeLocalStorage('tokenExpiresAt');  
+    this.removeLocalStorage('refreshTokenExpiresAt');
   }
 
+  setLocalStorage(key: string, value: string): void {
+    if(typeof localStorage !== 'undefined') {
+      localStorage.setItem(key, value);
+    }
+  }
+
+  getLocalStorage(key: string): string | null {
+    return typeof localStorage !== 'undefined'? localStorage.getItem(key): null;
+  }
+
+  removeLocalStorage(key: string): void {
+    if(typeof localStorage !== 'undefined') {
+      localStorage.removeItem(key);
+    }
+  }
 }

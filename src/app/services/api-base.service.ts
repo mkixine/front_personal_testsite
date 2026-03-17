@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, retry, catchError, timeout } from 'rxjs';
+import { Observable, throwError, retry, catchError, timeout, of, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 
@@ -15,56 +15,75 @@ export class ApiBaseService {
   /**
    * GETリクエストを送信
    */
-  protected get<T>(endpoint: string, params?: any, authService?: AuthService): Observable<T> {
+  protected get<T>(endpoint: string, params?: any, authService?: AuthService, noAuth: boolean = false): Observable<T> {
     const url = `${this.baseUrl}${endpoint}`;
     const httpParams = this.buildHttpParams(params);
-    const headers = this.buildHeaders(authService);
+    const headers = this.buildHeaders(authService, noAuth);
     
-    return this.http.get<T>(url, { 
-      headers,
-      params: httpParams
-    }).pipe(
-      timeout(environment.apiTimeout),
-      retry(environment.maxRetryAttempts),
-      catchError(this.handleError)
+    return headers.pipe(
+        switchMap((headers: HttpHeaders) => {
+            return this.http.get<T>(url, { 
+                headers,
+                params: httpParams
+            }).pipe(
+                timeout(environment.apiTimeout),
+                retry(environment.maxRetryAttempts),
+                catchError(this.handleError)
+            );
+        })
     );
   }
 
   /**
    * POSTリクエストを送信
    */
-  protected post<T>(endpoint: string, body: any, params?: any, authService?: AuthService): Observable<T> {
+  protected post<T>(endpoint: string, body: any, params?: any, authService?: AuthService, noAuth: boolean = false): Observable<T> {
     const url = `${this.baseUrl}${endpoint}`;
     const httpParams = this.buildHttpParams(params);
-    const headers = this.buildHeaders(authService);
+    const headers = this.buildHeaders(authService, noAuth);
     
-    return this.http.post<T>(url, body, { 
-      headers, 
-      params: httpParams
-    }).pipe(
-      timeout(environment.apiTimeout),
-      retry(environment.maxRetryAttempts),
-      catchError(this.handleError)
+    return headers.pipe(
+        switchMap((headers: HttpHeaders) => {
+            return this.http.post<T>(url, body, { 
+                headers,
+                params: httpParams
+            }).pipe(
+                timeout(environment.apiTimeout),
+                retry(environment.maxRetryAttempts),
+                catchError(this.handleError)
+            );  
+        })
     );
   }
 
   /**
    * ヘッダーを構築
    */
-  protected buildHeaders(authService?: AuthService): HttpHeaders {
+  protected buildHeaders(authService: AuthService | undefined, noAuth: boolean = false): Observable<HttpHeaders> {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
 
     // アクセストークンが有効な場合は追加
-    if (authService && authService.isTokenValid()) {
-      const accessToken = authService.getAccessToken();
+    if (noAuth) {
+        return of(headers);
+    }else if (authService && authService.isTokenValid()) {
+      const accessToken = authService.getAccessToken()
       if (accessToken) {
         headers = headers.set('X-RCMS-API-ACCESS-TOKEN', accessToken);
       }
+    } else if (authService && authService.isRefreshTokenValid()) {
+        authService.getAccessTokenFromRefreshToken().pipe(
+            switchMap((accessToken: string | null) => {
+                if (accessToken) {
+                    headers = headers.set('X-RCMS-API-ACCESS-TOKEN', accessToken);
+                }
+                return of(headers);
+            })
+        );
     }
 
-    return headers;
+    return of(headers);
   }
 
   /**
