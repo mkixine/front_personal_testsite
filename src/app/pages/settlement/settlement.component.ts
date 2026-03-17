@@ -6,6 +6,7 @@ import { ContentService } from '../../services/content.service';
 import { AuthService } from '../../services/auth.service';
 import { MemberService } from '../../services/member.service';
 import { CategoryService } from '../../services/category.service';
+import { forkJoin, of } from 'rxjs';
 import { ContentResponse, ContentRequest, ContentLiquidationRequest, ContentListParams, LiquidationItem } from '../../models/api.types';
 import { ContentModalComponent } from '../../components/content-modal/content-modal.component';
 
@@ -354,87 +355,67 @@ export class SettlementComponent implements OnInit {
     return sortedMergedSummary;
   }
 
-  // サマリー行の一括清算処理
+  // サマリー行の一括清算処理（単一購読で完了・エラーを一元管理）
   markSummaryAsPaid(summary: any): void {
     if (this.isSubmitting) return;
 
-    // 確認ダイアログ
     const liquidatorName = this.getMemberName(summary.liquidatorId);
     const creditorName = this.getMemberName(summary.creditorId);
     const amount = summary.totalAmount;
     const count = summary.id.length;
     const confirmed = confirm(`${liquidatorName} → ${creditorName}の${amount}円（${count}件）を一括で清算済みにしますか？`);
-    
     if (!confirmed) return;
 
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    // 対象のコンテンツIDを取得
-    const targetContentIds = summary.id;
-    let completedUpdates = 0;
-    const totalUpdates = targetContentIds.length;
-
-    // 各コンテンツを順次更新
-    targetContentIds.forEach((contentId: string) => {
+    const targetContentIds = summary.id as string[];
+    const observables = targetContentIds.map((contentId: string) => {
       const content = this.contentList.find(c => c.topics_id === contentId || c.id === contentId);
       if (!content) {
-        completedUpdates++;
-        if (completedUpdates === totalUpdates) {
-          this.isSubmitting = false;
-          this.loadContentList();
-        }
-        return;
+        return of(undefined);
       }
 
-      // 該当する清算者（liquidatorId）の清算データを更新
       const updatedLiquidation = content.liquidation.map((liquidation: any) => {
         const liquidatorId = liquidation.payer?.module_id;
         if (liquidatorId === summary.liquidatorId) {
-          return {
-            ...liquidation,
-            paid: { key: '1', label: '清算済' }
-          };
-        } else if (liquidatorId === summary.creditorId && content.creditor?.module_id === summary.liquidatorId) {
-          // 逆方向の清算も清算済みにする
-          return {
-            ...liquidation,
-            paid: { key: '1', label: '清算済' }
-          }
+          return { ...liquidation, paid: { key: '1', label: '清算済' } };
+        }
+        if (liquidatorId === summary.creditorId && content.creditor?.module_id === summary.liquidatorId) {
+          return { ...liquidation, paid: { key: '1', label: '清算済' } };
         }
         return liquidation;
       });
 
-      // 全ての清算が完了したかチェック
       const allPaid = updatedLiquidation.every((item: any) => {
         const paid = typeof item.paid === 'object' ? item.paid?.key : item.paid;
         return paid === '1' || paid === 1;
       });
 
-      // 更新データを準備
       const updateData: ContentLiquidationRequest = {
-        finished: allPaid ? "1" : "0", // 全て清算済みの場合は清算完了フラグも更新
+        finished: allPaid ? "1" : "0",
         paid: updatedLiquidation.map((item: any) => item.paid.key.toString())
       };
 
-      // APIで更新
-      this.contentService.updateContent(contentId, updateData).subscribe({
-        next: (response) => {
-          console.log(`コンテンツ${contentId}の清算更新成功:`, response);
-          completedUpdates++;
-          
-          // 全ての更新が完了したらデータを再読み込み
-          if (completedUpdates === totalUpdates) {
-            this.isSubmitting = false;
-            this.loadContentList();
-          }
-        },
-        error: (error) => {
-          console.error(`コンテンツ${contentId}の清算更新エラー:`, error);
-          this.errorMessage = '清算状態の更新に失敗しました。';
-          this.isSubmitting = false;
-        }
-      });
+      return this.contentService.updateContent(contentId, updateData);
+    });
+
+    if (observables.length === 0) {
+      this.isSubmitting = false;
+      this.loadContentList();
+      return;
+    }
+
+    forkJoin(observables).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.loadContentList();
+      },
+      error: (error) => {
+        console.error('一括清算の更新エラー:', error);
+        this.errorMessage = '清算状態の更新に失敗しました。';
+        this.isSubmitting = false;
+      }
     });
   }
 

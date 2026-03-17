@@ -28,17 +28,11 @@ export class TopComponent implements OnInit {
   }
 
   private checkAuthAndRedirect(): void {
-    // プロフィール取得でログイン状態を確認
-    this.authService.getProfile().subscribe({
-      next: (profile) => {
-        // ログイン済みの場合、settlementページへリダイレクト
-        this.router.navigate(['/settlement']);
-      },
-      error: (error) => {
-        // ログインしていない場合、loginページへリダイレクト
-        console.log('未ログイン状態です:', error);
-        this.router.navigate(['/login']);
-      }
-    });
+    // トークン有無の軽量判定のみ行い、APIは遷移先（settlement）に任せる
+    if (this.authService.isTokenValid() || this.authService.isRefreshTokenValid()) {
+      this.router.navigate(['/settlement']);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 }

@@ -118,20 +118,10 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // ログイン画面遷移時にログアウトを実行
-    this.logout();
-  }
-
-  private logout(): void {
-    this.authService.logout().subscribe({
-      next: (response) => {
-        console.log('ログアウト完了:', response);
-      },
-      error: (error) => {
-        console.log('ログアウトエラー（無視）:', error);
-        // ログアウトエラーは無視（既にログアウト済みの場合など）
-      }
-    });
+    // 有効なトークンがある場合のみローカルをクリア（不要なlogout API呼び出しを避ける）
+    if (this.authService.isTokenValid() || this.authService.isRefreshTokenValid()) {
+      this.authService.clearLocalSession();
+    }
   }
 
 
