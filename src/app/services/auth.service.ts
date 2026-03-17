@@ -156,6 +156,14 @@ export class AuthService extends ApiBaseService {
   }
 
   /**
+   * ローカル・メモリ上のトークンのみクリア（APIは呼ばない）
+   * ログイン画面表示時など、不要なlogout APIを避けたい場合に使用
+   */
+  clearLocalSession(): void {
+    this.clearAccessToken();
+  }
+
+  /**
    * アクセストークンをクリア
    */
   private clearAccessToken(): void {
