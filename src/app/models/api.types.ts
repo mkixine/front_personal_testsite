@@ -10,7 +10,8 @@ export interface LoginResponse {
 }
 
 export interface TokenRequest {
-  grant_token: string;
+  grant_token?: string;
+  refresh_token?: string;
 }
 
 export interface AccessToken {
@@ -20,6 +21,7 @@ export interface AccessToken {
 
 export interface TokenResponse {
   access_token: AccessToken;
+  refresh_token: AccessToken;
 }
 
 export interface ProfileResponse {
